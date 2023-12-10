@@ -1,0 +1,16 @@
+/target
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Other common ignores
+*.log
+temp/
+
