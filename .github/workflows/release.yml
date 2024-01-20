@@ -1,0 +1,44 @@
+name: "Build & Release Artifacts"
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - "main"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            archive: tar.gz tar.xz tar.zst
+          - target: x86_64-apple-darwin
+            archive: zip
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile
+        id: compile
+        uses: rust-build/rust-build.action@v1.4.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          RUSTTARGET: ${{ matrix.target }}
+          ARCHIVE_TYPES: ${{ matrix.archive }}
+          UPLOAD_MODE: none
+          SRC_DIR: "current_bin"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "${{matrix.target}} Binary"
+          path: |
+            ${{ steps.compile.outputs.BUILT_ARCHIVE }}
+            ${{ steps.compile.outputs.BUILT_CHECKSUM }}
