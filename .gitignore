@@ -14,3 +14,5 @@ Thumbs.db
 *.log
 temp/
 
+# coverage info added by CI config
+/lcov.info
