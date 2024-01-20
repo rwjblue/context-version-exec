@@ -16,7 +16,7 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-nextest,cargo-llvm-cov
-      - run: cargo llvm-cov nextest --workspace run
+      - run: cargo llvm-cov nextest --workspace run --profile=ci
 
   # Check formatting with rustfmt
   formatting:
