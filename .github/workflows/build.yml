@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.target }}
+
+      - name: Build
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Upload current_bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: context-version-exec-current_bin-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/current_bin
+
+      - name: Upload prior_bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: context-version-exec-prior_bin-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/prior_bin
