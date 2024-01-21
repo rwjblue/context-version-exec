@@ -40,14 +40,8 @@ jobs:
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Upload current_bin
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: context-version-exec-current_bin-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/current_bin
-
-      - name: Upload prior_bin
-        uses: actions/upload-artifact@v4
-        with:
-          name: context-version-exec-prior_bin-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/prior_bin
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/
