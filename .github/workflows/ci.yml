@@ -34,15 +34,17 @@ jobs:
           paths: "target/nextest/ci/junit.xml"
         if: always()
 
-  # Check formatting with rustfmt
-  formatting:
-    name: cargo fmt
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       # Ensure rustfmt is installed and setup problem matcher
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          components: rustfmt
-      - name: Rustfmt Check
+          components: rustfmt,clippy
+
+      - name: cargo fmt
         uses: actions-rust-lang/rustfmt@v1
+
+      - name: cargo clippy
+        run: "cargo clippy -- -D warnings"
