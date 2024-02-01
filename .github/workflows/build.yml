@@ -55,6 +55,9 @@ jobs:
     # only run for pushes to `master` or creation of tags
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
+    env:
+      GH_TOKEN: ${{ github.token }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -65,9 +68,9 @@ jobs:
           path: artifacts
       - name: Display structure of downloaded files
         run: ls -R
+      - name: Display available scopes
+        run: 'curl -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/user -Is | grep x-oauth-scopes'
 
       - name: Create release
         run: |
           gh release create ${{ github.ref_name }} ./artifacts/aarch64-apple-darwin/ ./artifacts/x86_64-apple-darwin/ ./artifacts/x86_64-unknown-linux-gnu/
-        env:
-          GH_TOKEN: ${{ github.token }}
