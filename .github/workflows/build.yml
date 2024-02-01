@@ -55,6 +55,10 @@ jobs:
     # only run for pushes to `master` or creation of tags
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
+    permissions:
+      contents: write
+      actions: write
+
     env:
       GH_TOKEN: ${{ github.token }}
 
@@ -68,8 +72,6 @@ jobs:
           path: artifacts
       - name: Display structure of downloaded files
         run: ls -R
-      - name: Display available scopes
-        run: 'curl -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/user -Is | grep x-oauth-scopes'
 
       - name: Create release
         run: |
